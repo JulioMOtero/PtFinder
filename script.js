@@ -1,7 +1,7 @@
 ﻿document.getElementById("formBuscaPersonagem").addEventListener("submit", async function (e) {
     e.preventDefault();
 
-    const nomeInput = document.getElementById("nomePersonagem").value.trim();
+    const nomeInput = document.getElementById("SearchField").value.trim();
 
     const iconesVocacao = {
         "druid": "https://www.tibiawiki.com.br/images/b/be/Snakebite_Rod.gif",
@@ -97,7 +97,7 @@
                     personagensOnline.push({
                         Name: nomePersonagem,
                         Level: parseInt(levelPersonagem),
-                        Vocation: vocacaoPersonagem //adicionar uma imagem ao lado de cada voc 
+                        Vocation: vocacaoPersonagem 
                     });
                 });
 
@@ -126,7 +126,7 @@
                 Object.keys(mapaVocacoes).forEach(voc => {
                     const checkbox = document.createElement("input");
                     checkbox.type = "checkbox";
-                    checkbox.value = voc.toLowerCase(); // melhor deixar tudo lowercase para comparar depois
+                    checkbox.value = voc.toLowerCase(); 
                     checkbox.id = `check-${voc}`;
 
                     const label = document.createElement("label");

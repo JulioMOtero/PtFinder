@@ -3,13 +3,15 @@
 <head>
     <meta charset="UTF-8" />
     <title>Tibia Party Finder</title>
+    <link rel="stylesheet" href="style.css" />
 </head>
 <body>
     <h1>Party finder</h1>
 
     <form id="formBuscaPersonagem">
-        <input type="text" id="nomePersonagem" placeholder="Character Name" required />
-        <button type="submit">Find a party</button>
+        <input id="SearchField" type="text" placeholder="Character Name" required />
+        
+        <button id="Search" type="submit">Find a party member</button>
     </form>
     <div id="detalhesPersonagem"></div>
 
@@ -17,9 +19,12 @@
     <script src="script.js"></script>
 
 
-    <p style="font-size: 12px; color: gray; text-align: center; margin-top: 20px;">
+    <p id="disclaimer">
         Este site é um projeto de fã e não é afiliado, associado ou endossado pela CipSoft GmbH.
         Tibia é uma marca registrada da CipSoft GmbH. Todos os direitos sobre o jogo e seus elementos pertencem à CipSoft GmbH.
+        &nbsp;&nbsp;
+        This website is a fan project and is not affiliated, associated, or endorsed by CipSoft GmbH.
+        Tibia is a registered trademark of CipSoft GmbH. All rights to the game and its elements belong to CipSoft GmbH.
     </p>
 
 </body>
