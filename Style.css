@@ -37,3 +37,37 @@ h1,
     border-bottom: 2px solid Black;
     text-align: center;
 }
+
+
+#container_pricipal {
+    display: flex;
+    place-items: center;    
+    margin: 0 20px 20px 20px;
+    text-align: center;   
+}
+
+.mensagem-quadrado {
+    flex: 1;
+    height: 100px;
+    max-width: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: Black;
+    font-weight: bold;
+    border-radius: 8px;
+}
+
+    .mensagem-quadrado.vermelho {
+        background-color: #FFFFFF;
+        color: white !important;
+    }
+
+.mensagem-quadrado.azul {
+    display: flex;
+    flex-direction: column;
+    background-color: #ccc;
+}
+a{
+    margin: 0 10px 10px 10px !important;
+}
