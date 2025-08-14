@@ -2,6 +2,8 @@
     e.preventDefault();
 
     const nomeInput = document.getElementById("SearchField").value.trim();
+    const loading = document.getElementById("loading");
+    loading.style.display = "inline";
 
     const iconesVocacao = {
         "druid": "https://www.tibiawiki.com.br/images/b/be/Snakebite_Rod.gif",
@@ -253,9 +255,7 @@
 
                 if (col === "Vocation") {
                     const vocRaw = normalizarVocacao(item[col]);
-                    console.log(`Vocação formatada: "${vocRaw}"`);
                     const vocImg = iconesVocacao[vocRaw];
-                    console.log(vocImg);
                     valor = vocImg
                         ? `<img src="${vocImg}" alt=" " style="height:30px; vertical-align:middle; margin-right:5px;" /> ${item[col]}`
                         : item[col];
@@ -272,6 +272,6 @@
 </table>`;
     }
 
-
+    loading.style.display = "none";
 });
 
