@@ -99,7 +99,7 @@
                     personagensOnline.push({
                         Name: nomePersonagem,
                         Level: parseInt(levelPersonagem),
-                        Vocation: vocacaoPersonagem 
+                        Vocation: vocacaoPersonagem
                     });
                 });
 
@@ -128,7 +128,7 @@
                 Object.keys(mapaVocacoes).forEach(voc => {
                     const checkbox = document.createElement("input");
                     checkbox.type = "checkbox";
-                    checkbox.value = voc.toLowerCase(); 
+                    checkbox.value = voc.toLowerCase();
                     checkbox.id = `check-${voc}`;
 
                     const label = document.createElement("label");
@@ -207,10 +207,10 @@
 
     function normalizarVocacao(texto) {
         return texto
-            .replace(/\u00A0/g, " ") 
-            .normalize("NFKD")       
-            .replace(/[^\w\s]/g, "")  
-            .replace(/\s+/g, " ")    
+            .replace(/\u00A0/g, " ")
+            .normalize("NFKD")
+            .replace(/[^\w\s]/g, "")
+            .replace(/\s+/g, " ")
             .trim()
             .toLowerCase();
     }
@@ -219,14 +219,14 @@
         return texto.replace(/\u00A0/g, " ").toLowerCase().trim();
     }
 
+
     function criarTabela(data, level, vocation) {
         if (!data || data.length === 0) return "<p>No characters found.</p>";
 
         const cabecalhos = Object.keys(data[0]);
-        const cabecalhoHTML = cabecalhos.map(h => `<th>${h}</th>`).join("");
-
-
-
+        const cabecalhoHTML = cabecalhos
+            .map((h, i) => `<th onclick="ordenarTabela(${i})" style="cursor:pointer;">${h} ⬍</th>`)
+            .join("");
 
         const levelInt = parseInt(level) || 0;
         const vocLower = (vocation || "").toLowerCase();
@@ -241,14 +241,6 @@
             const mesmaVocacao = itemVoc === vocLower;
 
             let estilo = "";
-
-            if (podeSharedXP && mesmaVocacao) {
-                estilo = "style='background-color:#a5d6a7; font-weight:bold;'";
-            } else if (podeSharedXP) {
-                estilo = "style='background-color:#c8e6c9;'";
-            } else if (mesmaVocacao) {
-                estilo = "style='background-color:#fff9c4;'";
-            }
 
             return `<tr ${estilo}>${cabecalhos.map(col => {
                 let valor = item[col]; // valor padrão
@@ -271,7 +263,53 @@
   <tbody>${linhasHTML}</tbody>
 </table>`;
     }
-
     loading.style.display = "none";
 });
 
+let colunaOrdenada = null;
+let ordemAscendente = true;
+
+function ordenarTabela(colIndex) {
+    const tabela = document.querySelector("table");
+    const tbody = tabela.querySelector("tbody");
+    const linhas = Array.from(tbody.querySelectorAll("tr"));
+
+    // Alterna direção caso clique na mesma coluna
+    if (colunaOrdenada === colIndex) {
+        ordemAscendente = !ordemAscendente;
+    } else {
+        colunaOrdenada = colIndex;
+        ordemAscendente = true;
+    }
+
+    linhas.sort((a, b) => {
+        const valorA = a.children[colIndex].innerText.trim();
+        const valorB = b.children[colIndex].innerText.trim();
+
+        // Se for número, compara como número
+        const numA = parseFloat(valorA.replace(',', '.'));
+        const numB = parseFloat(valorB.replace(',', '.'));
+
+        if (!isNaN(numA) && !isNaN(numB)) {
+            return ordemAscendente ? numA - numB : numB - numA;
+        }
+
+        // Caso contrário, compara como texto
+        return ordemAscendente
+            ? valorA.localeCompare(valorB)
+            : valorB.localeCompare(valorA);
+    });
+
+    // Remove setas de todos os cabeçalhos
+    tabela.querySelectorAll("th").forEach(th => {
+        th.innerHTML = th.innerHTML.replace(/[\u2B06\u2B07\u2B0D]/g, "");
+    });
+
+    // Adiciona seta no cabeçalho clicado
+    const th = tabela.querySelectorAll("th")[colIndex];
+    th.innerHTML += ordemAscendente ? " ⬆" : " ⬇";
+
+    // Atualiza corpo da tabela
+    tbody.innerHTML = "";
+    linhas.forEach(linha => tbody.appendChild(linha));
+}
