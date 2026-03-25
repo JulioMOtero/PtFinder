@@ -4,6 +4,9 @@
 #informacoes {
     visibility: hidden;
 }
+#tabelaResultado {
+    display: none;
+}
 
 #disclaimer {
     font-size: 12px;
