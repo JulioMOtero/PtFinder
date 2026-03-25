@@ -5,6 +5,15 @@
     const loading = document.getElementById("loading");
     loading.style.display = "inline";
 
+    const botao = document.getElementById("Search");
+    botao.disabled = true;
+
+    const info = document.getElementById("informacoes");
+
+
+    info.style.visibility = "visible";
+
+
     const iconesVocacao = {
         "druid": "https://www.tibiawiki.com.br/images/b/be/Snakebite_Rod.gif",
         "elder druid": "https://www.tibiawiki.com.br/images/b/be/Snakebite_Rod.gif",
@@ -31,10 +40,15 @@
         const doc = parser.parseFromString(html, "text/html");
 
         const tabela = doc.querySelector("table.TableContent");
+
         if (!tabela) {
-            document.getElementById("detalhesPersonagem").innerHTML = `<p style="color: red;">Character not found.</p>`;
+            mostrarErroTabela("Character not found.");
+
+            loading.style.display = "none";
+            botao.disabled = false;
             return;
         }
+        mostrarLoadingTabela();
 
         const linhas = tabela.querySelectorAll("tr");
         const dados = [];
@@ -66,6 +80,7 @@
                     break;
             }
         });
+
 
         const texto = `Character info:\nName: ${nome} | Level: ${level} | Vocation: ${vocation} | World: ${world}`;
 
@@ -104,7 +119,6 @@
                 });
 
                 const levelInt = parseInt(level) || 0;
-                const vocLower = (vocation || "").toLowerCase();
                 const nivelMinimo = Math.floor(levelInt * (2 / 3));
 
                 const personagensCompatíveis = personagensOnline.filter(item => {
@@ -113,11 +127,11 @@
                 });
 
                 const mapaVocacoes = {
-                    knight: ["knight", "elite knight"],
-                    sorcerer: ["sorcerer", "master sorcerer"],
-                    druid: ["druid", "elder druid"],
-                    paladin: ["paladin", "royal paladin"],
-                    monk: ["monk", "exalted monk"]
+                    knight: ["elite knight"],
+                    sorcerer: ["master sorcerer"],
+                    druid: ["elder druid"],
+                    paladin: ["royal paladin"],
+                    monk: ["exalted monk"]
                 };
 
                 const divInformacoes = document.getElementById("informacoes");
@@ -157,10 +171,10 @@
                 });
 
 
-                divInformacoes.innerHTML = `
-    <h2>Characters compatible with Shared XP in world ${world}</h2>
-    ${criarTabela(personagensCompatíveis, level, vocation)}
-`;
+                document.getElementById("tituloTabela").innerText =
+                    `Characters compatible with Shared XP in world ${world}`;
+                preencherTabela(personagensCompatíveis);
+
                 divInformacoes.prepend(divChecks);
 
                 divChecks.addEventListener("change", () => {
@@ -170,6 +184,7 @@
 
                     const filtrados = personagensCompatíveis.filter(p => {
                         const vocacaoPersonagem = normalizarTexto(p.Vocation || "");
+
 
                         if (selecionadas.length === 0) return true;
 
@@ -186,23 +201,25 @@
                     });
 
 
-                    const novaTabela = criarTabela(filtrados, level, vocation);
-                    divInformacoes.innerHTML = `
-    <h2>Characters compatible with Shared XP in world ${world}</h2>
-    ${novaTabela}
-  `;
+                    preencherTabela(filtrados);
                     divInformacoes.prepend(divChecks);
                 });
 
 
-
-
             } catch (erro) {
-                document.getElementById("informacoes").innerHTML = `<p style="color: red;">Error fetching online characters in world ${world}: ${erro.message}</p>`;
+                botao.disabled = false;
+                loading.style.display = "none";
+                mostrarErroTabela("Error fetching online characters.");
             }
         }
     } catch (err) {
-        document.getElementById("detalhesPersonagem").innerHTML = `<p style="color: red;">Error fetching character: ${err.message}</p>`;
+
+        mostrarErroTabela("Character not found.");
+    }
+    finally {
+
+        botao.disabled = false;
+        loading.style.display = "none";
     }
 
     function normalizarVocacao(texto) {
@@ -219,49 +236,36 @@
         return texto.replace(/\u00A0/g, " ").toLowerCase().trim();
     }
 
+    function preencherTabela(data) {
+        const tabela = document.getElementById("tabelaResultado");
+        const erroDiv = document.getElementById("mensagemErro");
 
-    function criarTabela(data, level, vocation) {
-        if (!data || data.length === 0) return "<p>No characters found.</p>";
+        tabela.style.display = "table";
+        erroDiv.style.display = "none";
 
-        const cabecalhos = Object.keys(data[0]);
-        const cabecalhoHTML = cabecalhos
-            .map((h, i) => `<th onclick="ordenarTabela(${i})" style="cursor:pointer;">${h} ⬍</th>`)
-            .join("");
+        const tbody = document.getElementById("corpoTabela");
 
-        const levelInt = parseInt(level) || 0;
-        const vocLower = (vocation || "").toLowerCase();
+        if (!data || data.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="3">No characters found.</td></tr>`;
+            return;
+        }
 
-        const nivelMinimo = Math.floor(levelInt * (2 / 3));
+        tbody.innerHTML = data.map(item => {
+            let vocRaw = normalizarVocacao(item.Vocation);
+            let vocImg = iconesVocacao[vocRaw];
 
-        const linhasHTML = data.map(item => {
-            const itemLevel = parseInt(item.Level) || 0;
-            const itemVoc = (item.Vocation || "").toLowerCase().trim();
+            let vocationHTML = vocImg
+                ? `<img src="${vocImg}" style="height:30px; vertical-align:middle; margin-right:5px;" /> ${item.Vocation}`
+                : item.Vocation;
 
-            const podeSharedXP = itemLevel >= nivelMinimo && itemLevel <= levelInt;
-            const mesmaVocacao = itemVoc === vocLower;
-
-            let estilo = "";
-
-            return `<tr ${estilo}>${cabecalhos.map(col => {
-                let valor = item[col]; // valor padrão
-
-                if (col === "Vocation") {
-                    const vocRaw = normalizarVocacao(item[col]);
-                    const vocImg = iconesVocacao[vocRaw];
-                    valor = vocImg
-                        ? `<img src="${vocImg}" alt=" " style="height:30px; vertical-align:middle; margin-right:5px;" /> ${item[col]}`
-                        : item[col];
-                }
-
-                return `<td>${valor}</td>`;
-            }).join("")}</tr>`;
+            return `
+            <tr>
+                <td>${item.Name}</td>
+                <td>${item.Level}</td>
+                <td>${vocationHTML}</td>
+            </tr>
+        `;
         }).join("");
-
-        return `
-<table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse; margin-top: 20px; width: 100%;">
-  <thead><tr>${cabecalhoHTML}</tr></thead>
-  <tbody>${linhasHTML}</tbody>
-</table>`;
     }
     loading.style.display = "none";
 });
@@ -269,12 +273,50 @@
 let colunaOrdenada = null;
 let ordemAscendente = true;
 
+function mostrarLoadingTabela() {
+    const div = document.getElementById("informacoes");
+
+    let linhas = "";
+
+    for (let i = 0; i < 8; i++) {
+        linhas += `
+            <tr>
+                <td><div class="skeleton"></div></td>
+                <td><div class="skeleton"></div></td>
+                <td><div class="skeleton"></div></td>
+            </tr>
+        `;
+    }
+
+    div.innerHTML = `
+        <table class="tResultado">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Level</th>
+                    <th>Vocation</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${linhas}
+            </tbody>
+        </table>
+    `;
+}
+function mostrarErroTabela(mensagem) {
+    const tabela = document.getElementById("tabelaResultado");
+    const erroDiv = document.getElementById("mensagemErro");
+
+    tabela.style.display = "none";   // 👈 esconde tabela
+    erroDiv.style.display = "block"; // 👈 mostra mensagem
+    erroDiv.innerText = mensagem;
+}
+
 function ordenarTabela(colIndex) {
     const tabela = document.querySelector("table");
     const tbody = tabela.querySelector("tbody");
     const linhas = Array.from(tbody.querySelectorAll("tr"));
 
-    // Alterna direção caso clique na mesma coluna
     if (colunaOrdenada === colIndex) {
         ordemAscendente = !ordemAscendente;
     } else {
@@ -286,7 +328,6 @@ function ordenarTabela(colIndex) {
         const valorA = a.children[colIndex].innerText.trim();
         const valorB = b.children[colIndex].innerText.trim();
 
-        // Se for número, compara como número
         const numA = parseFloat(valorA.replace(',', '.'));
         const numB = parseFloat(valorB.replace(',', '.'));
 
@@ -294,22 +335,18 @@ function ordenarTabela(colIndex) {
             return ordemAscendente ? numA - numB : numB - numA;
         }
 
-        // Caso contrário, compara como texto
         return ordemAscendente
             ? valorA.localeCompare(valorB)
             : valorB.localeCompare(valorA);
     });
 
-    // Remove setas de todos os cabeçalhos
     tabela.querySelectorAll("th").forEach(th => {
         th.innerHTML = th.innerHTML.replace(/[\u2B06\u2B07\u2B0D]/g, "");
     });
 
-    // Adiciona seta no cabeçalho clicado
     const th = tabela.querySelectorAll("th")[colIndex];
     th.innerHTML += ordemAscendente ? " ⬆" : " ⬇";
 
-    // Atualiza corpo da tabela
     tbody.innerHTML = "";
     linhas.forEach(linha => tbody.appendChild(linha));
 }

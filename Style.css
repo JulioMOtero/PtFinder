@@ -1,5 +1,10 @@
 ﻿body {
 }
+
+#informacoes {
+    visibility: hidden;
+}
+
 #disclaimer {
     font-size: 12px;
     color: gray;
@@ -13,12 +18,14 @@
     line-height: 1.4;
     font-family: Arial, sans-serif;
 }
-h1, 
-#formBuscaPersonagem, 
-#informacoes, 
+
+h1,
+#formBuscaPersonagem,
+#informacoes,
 #detalhesPersonagem {
     text-align: center;
 }
+
 #formBuscaPersonagem {
     display: flex;
     flex-direction: column;
@@ -26,12 +33,15 @@ h1,
     max-width: 200px;
     margin: 0 auto;
 }
+
 #Search {
     border-radius: 6px;
 }
-#Search:hover {
-    border-radius: 8px;
-}
+
+    #Search:hover {
+        border-radius: 8px;
+    }
+
 #SearchField {
     border: none;
     border-bottom: 2px solid Black;
@@ -41,9 +51,9 @@ h1,
 
 #container_pricipal {
     display: flex;
-    place-items: center;    
+    place-items: center;
     margin: 0 20px 20px 20px;
-    text-align: center;   
+    text-align: center;
 }
 
 .mensagem-quadrado {
@@ -63,11 +73,87 @@ h1,
         color: white !important;
     }
 
-.mensagem-quadrado.azul {
-    display: flex;
-    flex-direction: column;
-    background-color: #ccc;
-}
-a{
+    .mensagem-quadrado.azul {
+        display: flex;
+        flex-direction: column;
+        background-color: #ccc;
+    }
+
+a {
     margin: 0 10px 10px 10px !important;
+}
+
+.tResultado {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 20px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+    /* Cabeçalho */
+    .tResultado thead {
+        background: #ccc;
+        color: Black;
+    }
+
+    .tResultado th {
+        text-align: center;
+        font-weight: bold;
+        padding: 12px 15px;
+        cursor: pointer;
+        user-select: none;
+    }
+
+    /* Células */
+    .tResultado td {
+        padding: 5px 5px;
+        border-bottom: 2px solid #a8a5a5;
+        border-right: 2px solid #a8a5a5;
+        border-left: 2px solid #a8a5a5;
+    }
+
+    .tResultado tbody tr:nth-child(odd) {
+        background-color: #fafafa;
+    }
+
+    .tResultado tbody tr:hover {
+        background-color: #f1f7ff;
+    }
+
+
+    .tResultado thead th:first-child {
+        border-top-left-radius: 8px;
+    }
+
+    .tResultado thead th:last-child {
+        border-top-right-radius: 8px;
+    }
+
+.skeleton {
+    background: linear-gradient(90deg, #eee 25%, #ddd 37%, #eee 63%);
+    background-size: 400% 100%;
+    animation: skeleton-loading 1.4s ease infinite;
+    border-radius: 4px;
+    height: 20px;
+}
+
+@keyframes skeleton-loading {
+    0% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0 50%;
+    }
+}
+
+#Search:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
 }

@@ -25,7 +25,22 @@
     </div>
     <div id="detalhesPersonagem"></div>
 
-    <div id="informacoes"></div>
+    <div id="informacoes">
+        <h2 id="tituloTabela"></h2>
+
+        <div id="mensagemErro" style="display:none; text-align:center; color:red;"></div>
+
+        <table class="tResultado" id="tabelaResultado">
+            <thead>
+                <tr>
+                    <th onclick="ordenarTabela(0)">Name ⬍</th>
+                    <th onclick="ordenarTabela(1)">Level ⬍</th>
+                    <th onclick="ordenarTabela(2)">Vocation ⬍</th>
+                </tr>
+            </thead>
+            <tbody id="corpoTabela"></tbody>
+        </table>
+    </div>
     <script src="script.js"></script>
 
 
