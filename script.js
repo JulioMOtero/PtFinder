@@ -9,9 +9,7 @@
     botao.disabled = true;
 
     const info = document.getElementById("informacoes");
-
-
-    info.style.visibility = "visible";
+    info.style.display = "block";
 
 
     const iconesVocacao = {
@@ -48,7 +46,7 @@
             botao.disabled = false;
             return;
         }
-        mostrarLoadingTabela();
+
 
         const linhas = tabela.querySelectorAll("tr");
         const dados = [];
@@ -204,7 +202,7 @@
                     preencherTabela(filtrados);
                     divInformacoes.prepend(divChecks);
                 });
-
+                preencherTabela(filtrados);
 
             } catch (erro) {
                 botao.disabled = false;
@@ -244,6 +242,7 @@
         erroDiv.style.display = "none";
 
         const tbody = document.getElementById("corpoTabela");
+        tbody.innerHTML = "";
 
         if (!data || data.length === 0) {
             tbody.innerHTML = `<tr><td colspan="3">No characters found.</td></tr>`;
@@ -273,36 +272,7 @@
 let colunaOrdenada = null;
 let ordemAscendente = true;
 
-function mostrarLoadingTabela() {
-    const div = document.getElementById("informacoes");
 
-    let linhas = "";
-
-    for (let i = 0; i < 8; i++) {
-        linhas += `
-            <tr>
-                <td><div class="skeleton"></div></td>
-                <td><div class="skeleton"></div></td>
-                <td><div class="skeleton"></div></td>
-            </tr>
-        `;
-    }
-
-    div.innerHTML = `
-        <table class="tResultado">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Level</th>
-                    <th>Vocation</th>
-                </tr>
-            </thead>
-            <tbody>
-                ${linhas}
-            </tbody>
-        </table>
-    `;
-}
 function mostrarErroTabela(mensagem) {
     const tabela = document.getElementById("tabelaResultado");
     const erroDiv = document.getElementById("mensagemErro");
