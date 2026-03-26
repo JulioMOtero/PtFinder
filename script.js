@@ -131,6 +131,7 @@
                     paladin: ["royal paladin"],
                     monk: ["exalted monk"]
                 };
+                preencherTabela(personagensCompatíveis);
 
                 const divInformacoes = document.getElementById("informacoes");
                 const divChecks = document.createElement("div");
@@ -171,7 +172,6 @@
 
                 document.getElementById("tituloTabela").innerText =
                     `Characters compatible with Shared XP in world ${world}`;
-                preencherTabela(personagensCompatíveis);
 
                 divInformacoes.prepend(divChecks);
 

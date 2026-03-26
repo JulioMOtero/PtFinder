@@ -1,9 +1,6 @@
 ﻿body {
 }
 
-#informacoes {
-    visibility: hidden;
-}
 
 #tabelaResultado {
     display: none;
@@ -141,7 +138,3 @@ a {
 
 
 
-#Search:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
