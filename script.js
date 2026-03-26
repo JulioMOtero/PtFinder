@@ -124,6 +124,12 @@
                     return itemLevel >= nivelMinimo && itemLevel <= levelInt;
                 });
 
+                if (!personagensCompatíveis || personagensCompatíveis.length === 0) {
+                    mostrarErroTabela("No characters found in range.");
+                } else {
+                    preencherTabela(personagensCompatíveis);
+                }
+
                 const mapaVocacoes = {
                     knight: ["elite knight"],
                     sorcerer: ["master sorcerer"],
@@ -208,6 +214,8 @@
                 loading.style.display = "none";
                 mostrarErroTabela("Error fetching online characters.");
             }
+        } else {
+            mostrarErroTabela("World not found.");
         }
     } catch (err) {
 
