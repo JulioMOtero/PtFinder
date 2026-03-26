@@ -202,7 +202,6 @@
                     preencherTabela(filtrados);
                     divInformacoes.prepend(divChecks);
                 });
-                preencherTabela(filtrados);
 
             } catch (erro) {
                 botao.disabled = false;
